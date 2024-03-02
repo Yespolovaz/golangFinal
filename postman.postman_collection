@@ -1,0 +1,70 @@
+{
+	"info": {
+		"_postman_id": "eebd0be8-5129-4f73-992e-013fcf4ffb70",
+		"name": "Golang Bank Backend",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "25558607"
+	},
+	"item": [
+		{
+			"name": "Register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"User1\",\r\n    \"email\": \"user1@gmail.com\",\r\n    \"password\": \"User1\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:{{PORT}}/auth/register"
+			},
+			"response": []
+		},
+		{
+			"name": "Healthcheck",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:{{PORT}}/api/health"
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"User1\",\r\n    \"password\": \"User1\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:{{PORT}}/api/auth/login"
+			},
+			"response": []
+		},
+		{
+			"name": "GetUserById",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{JWT}}"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:{{PORT}}/api/users/4"
+			},
+			"response": []
+		}
+	]
+}
