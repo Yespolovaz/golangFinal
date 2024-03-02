@@ -1,7 +1,8 @@
 package main
 
-import "fmt"
+import "github.com/Yespolovaz/golangFinal/cmd/bank/api"
 
 func main() {
-	fmt.Println("Main Package")
+    // migrations.Migrate()
+    api.StartApi()
 }
