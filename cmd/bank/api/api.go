@@ -7,9 +7,12 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/Yespolovaz/golangFinal/pkg/bank/accounts"
 	"github.com/Yespolovaz/golangFinal/pkg/bank/helpers"
+	"github.com/Yespolovaz/golangFinal/pkg/bank/transactions"
 	"github.com/Yespolovaz/golangFinal/pkg/bank/users"
 	"github.com/gorilla/mux"
+	// "golang.org/x/crypto/nacl/auth"
 )
 
 // Interfaces
@@ -26,6 +29,13 @@ type Register struct {
 
 type ErrResponse struct {
 	Message string
+}
+
+type TransactionBody struct {
+	UserId uint
+	From   uint
+	To     uint
+	Amount int
 }
 
 // Handlers
@@ -53,7 +63,7 @@ func apiResponse(call map[string]interface{}, w http.ResponseWriter) {
 		json.NewEncoder(w).Encode(response)
 	} else {
 		// Handle error
-		response := ErrResponse{Message: "Something went wrong"}
+		response := call
 		json.NewEncoder(w).Encode(response)
 	}
 }
@@ -85,6 +95,17 @@ func login(w http.ResponseWriter, r *http.Request) {
 	apiResponse(login, w)
 }
 
+func transaction(w http.ResponseWriter, r *http.Request) {
+	body := readBody(r)
+	auth := r.Header.Get("Authorization")
+	var formattedBody TransactionBody
+	err := json.Unmarshal(body, &formattedBody)
+	helpers.HandleErr(err)
+
+	transaction := accounts.Transaction(formattedBody.UserId, formattedBody.From, formattedBody.To, formattedBody.Amount, auth)
+	apiResponse(transaction, w)
+}
+
 func getUser(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	userId := vars["id"]
@@ -93,6 +114,35 @@ func getUser(w http.ResponseWriter, r *http.Request) {
 	user := users.GetUser(userId, auth)
 
 	apiResponse(user, w)
+}
+
+func deleteUser(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	userId := vars["id"]
+	auth := r.Header.Get("Authorization")
+
+	user := users.DeleteUSer(userId, auth)
+
+	apiResponse(user, w)
+}
+
+func listUsers(w http.ResponseWriter, r *http.Request) {
+	usersList, err := users.ListUsers()
+	if err != nil {
+		apiResponse(map[string]interface{}{"error": "Failed to list users"}, w)
+		return
+	}
+
+	apiResponse(map[string]interface{}{"message": "Success", "users": usersList}, w)
+}
+
+func getMyTransactions(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	userId := vars["userID"]
+	auth := r.Header.Get("Authorization")
+
+	transactions := transactions.GetMyTransactions(userId, auth)
+	apiResponse(transactions, w)
 }
 
 // API initializator
@@ -104,8 +154,12 @@ func StartApi() {
 	router.HandleFunc("/api/health", healthCheck).Methods("GET")
 	router.HandleFunc("/api/auth/login", login).Methods("POST")
 	router.HandleFunc("/api/auth/register", register).Methods("POST")
+	router.HandleFunc("/transaction", transaction).Methods("POST")
+	router.HandleFunc("/transactions/{userID}", getMyTransactions).Methods("GET")
 	router.HandleFunc("/api/auth/register", register).Methods("GET")
 	router.HandleFunc("/api/users/{id}", getUser).Methods("GET")
+	router.HandleFunc("/api/users/{id}", deleteUser).Methods("DELETE")
+	router.HandleFunc("/api/users", listUsers).Methods("GET")
 
 	// MARK: check port number
 	fmt.Println("Listening on port: 5000")

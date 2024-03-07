@@ -3,6 +3,7 @@ package users
 import (
 	"time"
 
+	"github.com/Yespolovaz/golangFinal/pkg/bank/database"
 	"github.com/Yespolovaz/golangFinal/pkg/bank/helpers"
 	"github.com/Yespolovaz/golangFinal/pkg/bank/interfaces"
 	"github.com/dgrijalva/jwt-go"
@@ -54,9 +55,8 @@ func Login(username string, pass string) map[string]interface{} {
 
 	if valid {
 		// Connect db
-		db := helpers.ConnectDB()
 		user := &interfaces.User{}
-		if db.Where("username = ?", username).First(&user).RecordNotFound() {
+		if database.DB.Where("username = ?", username).First(&user).RecordNotFound() {
 			return map[string]interface{}{"message": "User not found"}
 		}
 
@@ -68,10 +68,9 @@ func Login(username string, pass string) map[string]interface{} {
 
 		// Find acc for the user
 		accounts := []interfaces.ResponseAccount{}
-		db.Table("accounts").Select("id, name, balance").Where("user_id = ?", user.ID).Scan(&accounts)
+		database.DB.Table("accounts").Select("id, name, balance").Where("user_id = ?", user.ID).Scan(&accounts)
 
 		// Close connection to db
-		defer db.Close()
 
 		var response = prepareResponse(user, accounts, true)
 
@@ -90,7 +89,6 @@ func Register(username string, email string, pass string) map[string]interface{}
 			{Value: pass, Valid: "password"}})
 
 	if valid {
-		db := helpers.ConnectDB()
 
 		generatedPassword := helpers.HashAndSalt([]byte(pass))
 
@@ -98,16 +96,14 @@ func Register(username string, email string, pass string) map[string]interface{}
 			Username: username,
 			Email:    email,
 			Password: generatedPassword}
-		db.Create(&user)
+		database.DB.Create(&user)
 
 		account := &interfaces.Account{
 			Type:    "Account",
 			Name:    string(username + "'s" + " account"),
 			Balance: 0,
 			UserId:  user.ID}
-		db.Create(&account)
-
-		defer db.Close()
+		database.DB.Create(&account)
 
 		accounts := []interfaces.ResponseAccount{}
 		responseAccount := interfaces.ResponseAccount{
@@ -129,16 +125,13 @@ func GetUser(id string, jwt string) map[string]interface{} {
 	isValid := helpers.ValidateToken(id, jwt)
 
 	if isValid {
-		db := helpers.ConnectDB()
 
 		user := &interfaces.User{}
-		if db.Where("id = ?", id).First(&user).RecordNotFound() {
+		if database.DB.Where("id = ?", id).First(&user).RecordNotFound() {
 			return map[string]interface{}{"message": "User not found"}
 		}
 		accounts := []interfaces.ResponseAccount{}
-		db.Table("accounts").Select("id, name, balance").Where("user_id = ?", user.ID).Scan(&accounts)
-
-		defer db.Close()
+		database.DB.Table("accounts").Select("id, name, balance").Where("user_id = ?", user.ID).Scan(&accounts)
 
 		var response = prepareResponse(user, accounts, false)
 
@@ -146,4 +139,33 @@ func GetUser(id string, jwt string) map[string]interface{} {
 	} else {
 		return map[string]interface{}{"message": "Not valid JWT token"}
 	}
+}
+
+func DeleteUSer(id string, jwt string) map[string]interface{} {
+	isValid := helpers.ValidateToken(id, jwt)
+
+	if isValid {
+
+		user := &interfaces.User{}
+		if database.DB.Where("id = ?", id).First(&user).RecordNotFound() {
+			return map[string]interface{}{"message": "User not found"}
+		}
+		if err := database.DB.Where("id = ?", id).Delete(&interfaces.User{}).Error; err != nil {
+			return map[string]interface{}{"error": err.Error()}
+		}
+
+		return map[string]interface{}{"message": "User deleted successfully"}
+	} else {
+
+		return map[string]interface{}{"message": "Not valid JWT token"}
+
+	}
+}
+
+func ListUsers() ([]interfaces.User, error) {
+	var users []interfaces.User
+	if err := database.DB.Find(&users).Error; err != nil {
+		return nil, err
+	}
+	return users, nil
 }

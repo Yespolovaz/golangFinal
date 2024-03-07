@@ -10,7 +10,6 @@ import (
 
 	"github.com/Yespolovaz/golangFinal/pkg/bank/interfaces"
 	"github.com/dgrijalva/jwt-go"
-	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -28,13 +27,13 @@ func HashAndSalt(pass []byte) string {
 	return string(hashed)
 }
 
-func ConnectDB() *gorm.DB {
-	// MARK: check credentials
-	cfg := "host=localhost port=5432 user=postgres dbname=postgres password=123 sslmode=disable"
-	db, err := gorm.Open("postgres", cfg)
-	HandleErr(err)
-	return db
-}
+// func ConnectDB() *gorm.DB {
+// 	// MARK: check credentials
+// 	cfg := "host=localhost port=5432 user=postgres dbname=postgres password=123 sslmode=disable"
+// 	db, err := gorm.Open("postgres", cfg)
+// 	HandleErr(err)
+// 	return db
+// }
 
 func Validation(values []interfaces.Validation) bool {
 	username := regexp.MustCompile(`^([A-Za-z0-9]{5,})+$`)
