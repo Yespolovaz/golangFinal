@@ -85,13 +85,11 @@ func register(w http.ResponseWriter, r *http.Request) {
 
 func login(w http.ResponseWriter, r *http.Request) {
 	body := readBody(r)
-
 	// Handle login
 	var formattedBody Login
 	var err = json.Unmarshal(body, &formattedBody)
 	helpers.HandleErr(err)
 	login := users.Login(formattedBody.Username, formattedBody.Password)
-
 	apiResponse(login, w)
 }
 
@@ -154,9 +152,9 @@ func StartApi() {
 	router.HandleFunc("/api/health", healthCheck).Methods("GET")
 	router.HandleFunc("/api/auth/login", login).Methods("POST")
 	router.HandleFunc("/api/auth/register", register).Methods("POST")
-	router.HandleFunc("/transaction", transaction).Methods("POST")
-	router.HandleFunc("/transactions/{userID}", getMyTransactions).Methods("GET")
-	router.HandleFunc("/api/auth/register", register).Methods("GET")
+	router.HandleFunc("/api/transactions", transaction).Methods("POST")
+	router.HandleFunc("/api/transactions/{userID}", getMyTransactions).Methods("GET")
+	// router.HandleFunc("/api/auth/register", register).Methods("GET")
 	router.HandleFunc("/api/users/{id}", getUser).Methods("GET")
 	router.HandleFunc("/api/users/{id}", deleteUser).Methods("DELETE")
 	router.HandleFunc("/api/users", listUsers).Methods("GET")

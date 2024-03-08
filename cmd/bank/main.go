@@ -7,9 +7,8 @@ import (
 )
 
 func main() {
-	// migrations.Migrate()
-	api.StartApi()
-	// migrations.MigrateTransactions()
 	database.InitDatabase()
-
+	// migrations.Migrate()
+	// migrations.MigrateTransactions()
+	api.StartApi()
 }

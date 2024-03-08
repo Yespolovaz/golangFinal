@@ -56,7 +56,7 @@ func Login(username string, pass string) map[string]interface{} {
 	if valid {
 		// Connect db
 		user := &interfaces.User{}
-		if database.DB.Where("username = ?", username).First(&user).RecordNotFound() {
+		if database.DB.Where("username = ?", username).First(&user).RecordNotFound() { // FIXME: - bug
 			return map[string]interface{}{"message": "User not found"}
 		}
 
@@ -71,7 +71,6 @@ func Login(username string, pass string) map[string]interface{} {
 		database.DB.Table("accounts").Select("id, name, balance").Where("user_id = ?", user.ID).Scan(&accounts)
 
 		// Close connection to db
-
 		var response = prepareResponse(user, accounts, true)
 
 		return response

@@ -44,10 +44,10 @@ func Migrate() {
 	createAccounts()
 }
 
-// func MigrateTransactions() {
-//     Transactions := &interfaces.Transaction{}
+func MigrateTransactions() {
+	Transactions := &interfaces.Transaction{}
 
-//     db := helpers.ConnectDB()
-//     db.AutoMigrate(&Transactions)
-//     defer db.Close()
-// }
+	db := helpers.ConnectDB()
+	db.AutoMigrate(&Transactions)
+	defer db.Close()
+}

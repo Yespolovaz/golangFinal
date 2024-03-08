@@ -65,6 +65,63 @@
 				"url": "http://localhost:{{PORT}}/api/users/4"
 			},
 			"response": []
+		},
+		{
+			"name": "GetUsers",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:{{PORT}}/api/users"
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteUserById",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": "http://localhost:{{PORT}}/api/users/5"
+			},
+			"response": []
+		},
+		{
+			"name": "GetTransactionsByUserId",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{JWT}}"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:{{PORT}}/api/transactions/4"
+			},
+			"response": []
+		},
+		{
+			"name": "PostTransaction",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{JWT}}"
+					}
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"userid\": 4,\r\n    \"from\": 4,\r\n    \"to\": 4,\r\n    \"amount\": 100\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:{{PORT}}/api/transactions"
+			},
+			"response": []
 		}
 	]
 }
