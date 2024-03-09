@@ -9,7 +9,7 @@ var DB *gorm.DB
 
 func InitDatabase() {
 	// MARK: check credentials
-	cfg := "host=localhost port=5432 user=postgres dbname=postgres password=123 sslmode=disable"
+	cfg := "host=localhost port=5433 user=postgres dbname=postgres password=123 sslmode=disable"
 	db, err := gorm.Open("postgres", cfg)
 	helpers.HandleErr(err)
 	helpers.HandleErr(err)

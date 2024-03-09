@@ -30,7 +30,7 @@ func HashAndSalt(pass []byte) string {
 
 func ConnectDB() *gorm.DB {
 	// MARK: check credentials
-	cfg := "host=localhost port=5432 user=postgres dbname=postgres password=123 sslmode=disable"
+	cfg := "host=localhost port=5433 user=postgres dbname=postgres password=123 sslmode=disable"
 	db, err := gorm.Open("postgres", cfg)
 	HandleErr(err)
 	return db
@@ -104,7 +104,7 @@ func ValidateToken(id string, jwtToken string) bool {
 
 	HandleErr(err)
 
-	var userId, _ = strconv.ParseFloat(id, 8)
+	var userId, _ = strconv.ParseFloat(id, 32) // 8, 32, 64
 
 	return token.Valid && tokenData["user_id"] == userId // T or F
 }
