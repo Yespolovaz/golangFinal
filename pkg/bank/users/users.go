@@ -169,3 +169,22 @@ func ListUsers() ([]interfaces.User, error) {
 	}
 	return users, nil
 }
+
+func UpdateUser(id string, jwt string) map[string]interface{} {
+	isValid := helpers.ValidateToken(id, jwt)
+
+	if isValid {
+		user := &interfaces.User{}
+		if database.DB.Where("id = ?", id).First(&user).RecordNotFound() {
+			return map[string]interface{}{"message": "User not found"}
+		}
+
+		if err := database.DB.Save(&user).Error; err != nil {
+			return map[string]interface{}{"error": err.Error()}
+		}
+
+		return map[string]interface{}{"message": "User updated successfully"}
+	} else {
+		return map[string]interface{}{"message": "Not valid JWT token"}
+	}
+}

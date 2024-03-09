@@ -1,7 +1,7 @@
-#🌟 Project Name: Sigma Bank 🚀
+🌟 Project Name: Sigma Bank 🚀
 Welcome to the **Sigma bank**! 🎉
 
-##📝 Project Description
+📝 Project Description
 The Sigma bank is a comprehensive web application that combines online banking, shopping 🛒, insurance, and money transfers. It provides users with a seamless experience to manage their finances, purchase products, obtain insurance coverage, and transfer money between accounts. 💰💳
 
 1. [Project Description](#project-description)
@@ -12,7 +12,7 @@ The Sigma bank is a comprehensive web application that combines online banking, 
 6. [Code Structure](#code-structure)
 7. [Getting Started](#getting-started)
 
-#Getting Started
+Getting Started
 
 ##🚀 API Structure
 The API is designed to provide endpoints for various functionalities, including user management, banking operations, shopping, insurance, and money transfers. Each endpoint is carefully crafted to ensure security, efficiency, and ease of use for the end-users. 🌐
@@ -20,6 +20,9 @@ The API is designed to provide endpoints for various functionalities, including 
 ### User Management API
 
 - `/api/users` - Endpoint to manage users (CRUD operations).
+- `/api/users/{id}` - Endpoint to manage CRUD operations with users by ID. 
+- `/api/auth/login` - Endpoint to login.
+- `/api/auth/register` - Endpoint to register users.
 
 ### Banking API
 
@@ -35,14 +38,11 @@ The API is designed to provide endpoints for various functionalities, including 
 
 - `/api/policies` - Endpoint to manage insurance policies (CRUD operations).
 
-### Money Transfer API
-
-- `/api/transfers` - Endpoint to initiate money transfers between accounts.
 
 ##🏦 Database Entity Structure
 The database of the project consists of several entities interconnected to support the functionalities of the application. The main entities include users, bank accounts, products, insurance policies, and transactions. These entities are designed to store relevant information and maintain relationships to facilitate seamless operations within the application. 🗃️
 
-### User Entity
+<!-- ### User Entity
 
 - `id` - Unique identifier for the user.
 - `username` - Username of the user.
@@ -79,34 +79,37 @@ The database of the project consists of several entities interconnected to suppo
 - `id` - Unique identifier for the transaction.
 - `accountId` - Foreign key referencing the bank account involved in the transaction.
 - `type` - Type of transaction (e.g., deposit, withdrawal, transfer).
-- `amount` - Amount of the transaction.
+- `amount` - Amount of the transaction. -->
 - ...
 
 👨‍💻 Team Members
 - [Mombekov Dias](https://github.com/Dias21B030874) (Student ID: 21B030874) 🧑‍💼
-- [Yespolova Zharkynay](https://github.com/Dias21B030874) (Student ID: 21B030666) 👩‍💼
-- [Kidirmaganbetov Nurken](https://github.com/Dias21B030874) (Student ID: 21B030) 🧑‍💻
+- [Yespolova Zharkynay](https://github.com/Yespolovaz) (Student ID: 21B030666) 👩‍💼
+- [Kidirmaganbetov Nurken](https://github.com/chronosgit) (Student ID: 21B030688) 🧑‍💻
 
-##🔨 CRUD Functionality
+🔨 CRUD Functionality
 The project implements CRUD (Create, Read, Update, Delete) functionality for managing various entities in the system. For example, users can create, view, update, and delete their bank accounts, products, insurance policies, and transactions. The CRUD operations ensure that users have full control over their data and can perform necessary actions with ease. 🔄
 
-##📁 Code Structure
+📁 Code Structure
 The codebase of the project follows the Standard Layout convention to maintain consistency and readability. The project is organized into modules, each focusing on specific functionalities such as user management, banking operations, shopping, insurance, and money transfers. The codebase is well-documented and adheres to best practices to ensure maintainability and scalability. 📦
 
 In this structure:
 
-- `cmd`: Contains the main application entry point.
+- `cmd`: Contains the main application entry point, handlers.
+  <!-- - `api`: Handles API endpoints. -->
 - `pkg`: Contains the internal packages of the application.
-  - `api`: Handles API endpoints.
-  - `models`: Defines the data models.
-  - `repositories`: Implements data access logic.
-  - `services`: Implements business logic.
-- `migrations`: Contains database migration scripts.
-- `config`: Contains configuration files.
+  - `accounts`: Defines the accounts models.
+  - `users`: Defines the users models.
+  - `transactions`: Defines the transactions models.
+  - `database`: Defines the database connection.
+  - `helpers`: Implements data access logic(token, encryption, validation).
+  - `interfaces`: Implements data entity structs.
+  - `migrations`: Contains database migration scripts.
+<!-- - `config`: Contains configuration files. -->
 - `go.mod`: Go module file.
 
 
-##🚀 Getting Started
+🚀 Getting Started
 To get started with the *Sigma bank*, follow these steps:
 
 Thank you for choosing the **Sigma Bank**! We hope you have a great experience using our application. 🌟
