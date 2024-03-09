@@ -27,14 +27,6 @@ func HashAndSalt(pass []byte) string {
 	return string(hashed)
 }
 
-// func ConnectDB() *gorm.DB {
-// 	// MARK: check credentials
-// 	cfg := "host=localhost port=5432 user=postgres dbname=postgres password=123 sslmode=disable"
-// 	db, err := gorm.Open("postgres", cfg)
-// 	HandleErr(err)
-// 	return db
-// }
-
 func Validation(values []interfaces.Validation) bool {
 	username := regexp.MustCompile(`^([A-Za-z0-9]{5,})+$`)
 	email := regexp.MustCompile(`^[A-Za-z0-9]+[@]+[A-Za-z0-9]+[.]+[A-Za-z0-9]+$`)
@@ -64,7 +56,7 @@ func PanicHandler(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		defer func() {
 			error := recover()
-
+			log.Println("log")
 			if error != nil {
 				log.Println(error)
 				response := interfaces.ErrorResponse{Message: "Internal server"}

@@ -25,6 +25,13 @@ type Register struct {
 	Username string
 	Email    string
 	Password string
+	Name     string
+	Surname  string
+}
+
+type UpdateUser struct {
+	Name    string
+	Surname string
 }
 
 type ErrResponse struct {
@@ -78,7 +85,9 @@ func register(w http.ResponseWriter, r *http.Request) {
 	register := users.Register(
 		formattedBody.Username,
 		formattedBody.Email,
-		formattedBody.Password)
+		formattedBody.Password,
+		formattedBody.Name,
+		formattedBody.Surname)
 
 	apiResponse(register, w)
 }
@@ -121,7 +130,7 @@ func deleteUser(w http.ResponseWriter, r *http.Request) {
 	userId := vars["id"]
 	auth := r.Header.Get("Authorization")
 
-	user := users.DeleteUSer(userId, auth)
+	user := users.DeleteUser(userId, auth)
 
 	apiResponse(user, w)
 }
@@ -141,7 +150,16 @@ func updateUser(w http.ResponseWriter, r *http.Request) {
 	userID := vars["id"]
 	auth := r.Header.Get("Authorization")
 
-	response := users.UpdateUser(userID, auth)
+	body := readBody(r)
+	var formattedBody UpdateUser
+	var err = json.Unmarshal(body, &formattedBody)
+	helpers.HandleErr(err)
+
+	response := users.UpdateUser(
+		userID,
+		auth,
+		formattedBody.Name,
+		formattedBody.Surname)
 
 	apiResponse(response, w)
 }
@@ -164,8 +182,8 @@ func StartApi() {
 	router.HandleFunc("/api/health", healthCheck).Methods("GET")
 	router.HandleFunc("/api/auth/login", login).Methods("POST")
 	router.HandleFunc("/api/auth/register", register).Methods("POST")
-	router.HandleFunc("/transaction", transaction).Methods("POST")
-	router.HandleFunc("/transactions/{userID}", getMyTransactions).Methods("GET")
+	router.HandleFunc("/api/transaction", transaction).Methods("POST")
+	router.HandleFunc("/api/transactions/{userID}", getMyTransactions).Methods("GET")
 	router.HandleFunc("/api/auth/register", register).Methods("GET")
 	router.HandleFunc("/api/users/{id}", getUser).Methods("GET")
 	router.HandleFunc("/api/users/{id}", deleteUser).Methods("DELETE")

@@ -80,7 +80,7 @@ func Login(username string, pass string) map[string]interface{} {
 	}
 }
 
-func Register(username string, email string, pass string) map[string]interface{} {
+func Register(username string, email string, pass string, name string, surname string) map[string]interface{} {
 	// Validate
 	valid := helpers.Validation(
 		[]interfaces.Validation{
@@ -95,7 +95,9 @@ func Register(username string, email string, pass string) map[string]interface{}
 		user := &interfaces.User{
 			Username: username,
 			Email:    email,
-			Password: generatedPassword}
+			Password: generatedPassword,
+			Name:     name,
+			Surname:  surname}
 		database.DB.Create(&user)
 
 		account := &interfaces.Account{
@@ -141,7 +143,7 @@ func GetUser(id string, jwt string) map[string]interface{} {
 	}
 }
 
-func DeleteUSer(id string, jwt string) map[string]interface{} {
+func DeleteUser(id string, jwt string) map[string]interface{} {
 	isValid := helpers.ValidateToken(id, jwt)
 
 	if isValid {
@@ -170,13 +172,20 @@ func ListUsers() ([]interfaces.User, error) {
 	return users, nil
 }
 
-func UpdateUser(id string, jwt string) map[string]interface{} {
+func UpdateUser(id string, jwt string, name string, surname string) map[string]interface{} {
 	isValid := helpers.ValidateToken(id, jwt)
 
 	if isValid {
 		user := &interfaces.User{}
 		if database.DB.Where("id = ?", id).First(&user).RecordNotFound() {
 			return map[string]interface{}{"message": "User not found"}
+		}
+
+		if name != "" {
+			user.Name = name
+		}
+		if surname != "" {
+			user.Surname = surname
 		}
 
 		if err := database.DB.Save(&user).Error; err != nil {
